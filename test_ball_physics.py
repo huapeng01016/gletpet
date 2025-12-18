@@ -12,22 +12,22 @@ class BouncingBall3DPhysics:
         self.y = 0.0
         self.z = -5.0
         
-        self.vx = 0.02
-        self.vy = 0.03
-        self.vz = 0.01
+        self.vx = 1.2
+        self.vy = 1.8
+        self.vz = 0.6
         
         self.radius = 0.5
         self.bounds = 2.5
-        self.gravity = -0.001
+        self.gravity = -0.06
         self.damping = 0.95
         
     def update(self, dt):
         """Update ball position and handle bouncing"""
-        self.vy += self.gravity * dt * 60
+        self.vy += self.gravity * dt
         
-        self.x += self.vx * dt * 60
-        self.y += self.vy * dt * 60
-        self.z += self.vz * dt * 60
+        self.x += self.vx * dt
+        self.y += self.vy * dt
+        self.z += self.vz * dt
         
         if abs(self.x) > self.bounds - self.radius:
             self.vx = -self.vx * self.damping

@@ -71,10 +71,10 @@ class BouncingBall3D:
         self.y = 0.0
         self.z = -5.0
         
-        # Velocity
-        self.vx = 0.02
-        self.vy = 0.03
-        self.vz = 0.01
+        # Velocity (units per second)
+        self.vx = 1.2
+        self.vy = 1.8
+        self.vz = 0.6
         
         # Ball radius
         self.radius = 0.5
@@ -82,8 +82,8 @@ class BouncingBall3D:
         # Boundaries
         self.bounds = 2.5
         
-        # Gravity
-        self.gravity = -0.001
+        # Gravity (units per second squared)
+        self.gravity = -0.06
         
         # Damping for realistic bounce
         self.damping = 0.95
@@ -91,12 +91,12 @@ class BouncingBall3D:
     def update(self, dt):
         """Update ball position and handle bouncing"""
         # Apply gravity (frame-rate independent)
-        self.vy += self.gravity * dt * 60
+        self.vy += self.gravity * dt
         
         # Update position (frame-rate independent)
-        self.x += self.vx * dt * 60
-        self.y += self.vy * dt * 60
-        self.z += self.vz * dt * 60
+        self.x += self.vx * dt
+        self.y += self.vy * dt
+        self.z += self.vz * dt
         
         # Bounce off walls (x-axis)
         if abs(self.x) > self.bounds - self.radius:
