@@ -33,13 +33,13 @@ class BouncingBall3D:
         
     def update(self, dt):
         """Update ball position and handle bouncing"""
-        # Apply gravity
-        self.vy += self.gravity
+        # Apply gravity (frame-rate independent)
+        self.vy += self.gravity * dt * 60
         
-        # Update position
-        self.x += self.vx
-        self.y += self.vy
-        self.z += self.vz
+        # Update position (frame-rate independent)
+        self.x += self.vx * dt * 60
+        self.y += self.vy * dt * 60
+        self.z += self.vz * dt * 60
         
         # Bounce off walls (x-axis)
         if abs(self.x) > self.bounds - self.radius:
@@ -182,6 +182,7 @@ class BallWindow(pyglet.window.Window):
     
     def on_resize(self, width, height):
         """Handle window resize"""
+        super().on_resize(width, height)
         glViewport(0, 0, width, height)
         return pyglet.event.EVENT_HANDLED
 
