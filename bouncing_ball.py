@@ -98,9 +98,6 @@ class BouncingBallGame:
         # Create ball in the center
         self.ball = BouncingBall(width // 2, height // 2)
         
-        # Create background batch for efficient rendering
-        self.batch = pyglet.graphics.Batch()
-        
         # Set up event handlers
         self.window.on_draw = self.on_draw
         
