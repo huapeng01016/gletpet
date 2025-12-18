@@ -7,6 +7,11 @@ from pyglet.gl import *
 import math
 
 
+# Constants
+TARGET_FPS = 60
+GRAVITY = -9.8  # units per second squared (more realistic gravity)
+
+
 def setup_perspective(fov, aspect, near, far):
     """Set up perspective projection matrix manually"""
     f = 1.0 / math.tan(math.radians(fov) / 2.0)
@@ -82,8 +87,8 @@ class BouncingBall3D:
         # Boundaries
         self.bounds = 2.5
         
-        # Gravity (units per second squared)
-        self.gravity = -0.06
+        # Gravity (use global constant)
+        self.gravity = GRAVITY
         
         # Damping for realistic bounce
         self.damping = 0.95
@@ -173,7 +178,7 @@ class BallWindow(pyglet.window.Window):
         self.ball = BouncingBall3D()
         
         # Schedule update
-        pyglet.clock.schedule_interval(self.update, 1/60.0)
+        pyglet.clock.schedule_interval(self.update, 1/TARGET_FPS)
         
     def on_draw(self):
         """Render the scene"""

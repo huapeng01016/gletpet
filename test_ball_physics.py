@@ -5,6 +5,11 @@ Unit tests for the 3D bouncing ball physics (without GUI)
 import math
 
 
+# Constants (should match main implementation)
+TARGET_FPS = 60
+GRAVITY = -9.8  # units per second squared
+
+
 class BouncingBall3DPhysics:
     """Ball physics without OpenGL dependencies for testing"""
     def __init__(self):
@@ -18,7 +23,7 @@ class BouncingBall3DPhysics:
         
         self.radius = 0.5
         self.bounds = 2.5
-        self.gravity = -0.06
+        self.gravity = GRAVITY
         self.damping = 0.95
         
     def update(self, dt):
@@ -53,9 +58,9 @@ def test_ball_physics():
     print(f"Initial position: ({ball.x:.2f}, {ball.y:.2f}, {ball.z:.2f})")
     print(f"Initial velocity: ({ball.vx:.3f}, {ball.vy:.3f}, {ball.vz:.3f})")
     
-    # Simulate 1000 updates (about 16.7 seconds at 60 FPS)
+    # Simulate 1000 updates (about 16.7 seconds at TARGET_FPS)
     for i in range(1000):
-        ball.update(1/60.0)
+        ball.update(1/TARGET_FPS)
         
         # Verify boundaries
         assert abs(ball.x) <= ball.bounds + 0.01, f"X out of bounds at step {i}: {ball.x}"
