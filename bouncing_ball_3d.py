@@ -7,6 +7,63 @@ from pyglet.gl import *
 import math
 
 
+def setup_perspective(fov, aspect, near, far):
+    """Set up perspective projection matrix manually"""
+    f = 1.0 / math.tan(math.radians(fov) / 2.0)
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    
+    # Create perspective projection matrix
+    matrix = (GLfloat * 16)(
+        f / aspect, 0, 0, 0,
+        0, f, 0, 0,
+        0, 0, (far + near) / (near - far), -1,
+        0, 0, (2 * far * near) / (near - far), 0
+    )
+    glLoadMatrixf(matrix)
+
+
+def setup_lookat(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z):
+    """Set up view matrix manually (lookat)"""
+    # Calculate forward vector
+    fx = center_x - eye_x
+    fy = center_y - eye_y
+    fz = center_z - eye_z
+    
+    # Normalize forward
+    f_len = math.sqrt(fx*fx + fy*fy + fz*fz)
+    fx, fy, fz = fx/f_len, fy/f_len, fz/f_len
+    
+    # Calculate right vector (cross product of forward and up)
+    rx = fy * up_z - fz * up_y
+    ry = fz * up_x - fx * up_z
+    rz = fx * up_y - fy * up_x
+    
+    # Normalize right
+    r_len = math.sqrt(rx*rx + ry*ry + rz*rz)
+    rx, ry, rz = rx/r_len, ry/r_len, rz/r_len
+    
+    # Calculate up vector (cross product of right and forward)
+    ux = ry * fz - rz * fy
+    uy = rz * fx - rx * fz
+    uz = rx * fy - ry * fx
+    
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+    
+    # Create view matrix
+    matrix = (GLfloat * 16)(
+        rx, ux, -fx, 0,
+        ry, uy, -fy, 0,
+        rz, uz, -fz, 0,
+        -(rx*eye_x + ry*eye_y + rz*eye_z),
+        -(ux*eye_x + uy*eye_y + uz*eye_z),
+        (fx*eye_x + fy*eye_y + fz*eye_z),
+        1
+    )
+    glLoadMatrixf(matrix)
+
+
 class BouncingBall3D:
     def __init__(self):
         # Ball properties
@@ -123,15 +180,12 @@ class BallWindow(pyglet.window.Window):
         self.clear()
         
         # Set up 3D perspective
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        gluPerspective(60.0, self.width / self.height, 0.1, 100.0)
+        setup_perspective(60.0, self.width / self.height, 0.1, 100.0)
         
-        glMatrixMode(GL_MODELVIEW)
-        glLoadIdentity()
-        gluLookAt(0, 0, 0,    # Eye position
-                  0, 0, -5,   # Look at position
-                  0, 1, 0)    # Up vector
+        # Set up view matrix
+        setup_lookat(0, 0, 0,    # Eye position
+                     0, 0, -5,   # Look at position
+                     0, 1, 0)    # Up vector
         
         # Draw the red ball
         glColor3f(1.0, 0.0, 0.0)  # Red color
