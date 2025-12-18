@@ -30,8 +30,13 @@ class BouncingBall:
         self.velocity_x = 200
         self.velocity_y = 250
         
-        # Create the visual circle
-        self.shape = shapes.Circle(x, y, radius, color=color)
+        # Create the visual circle (only when shapes module is available)
+        self.shape = None
+        try:
+            self.shape = shapes.Circle(x, y, radius, color=color)
+        except Exception:
+            # Skip shape creation in headless environments
+            pass
     
     def update(self, dt, window_width, window_height):
         """
@@ -63,12 +68,14 @@ class BouncingBall:
             self.velocity_y = -abs(self.velocity_y)  # Bounce down
         
         # Update shape position
-        self.shape.x = self.x
-        self.shape.y = self.y
+        if self.shape:
+            self.shape.x = self.x
+            self.shape.y = self.y
     
     def draw(self):
         """Draw the ball"""
-        self.shape.draw()
+        if self.shape:
+            self.shape.draw()
 
 
 class BouncingBallGame:
